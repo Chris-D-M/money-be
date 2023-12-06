@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql-db
+
+  prisma:
+    build: .
+    command: [ "prisma", "migrate", "dev" ] # Use "prisma" command directly
+
+  mysql-db:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-config:/mysql-config
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
